@@ -1,9 +1,11 @@
 import React from "react";
+import { clsx } from "clsx";
 import { Inter } from "next/font/google";
 
-import { Providers } from "@/app/providers";
-
 import "./globals.css";
+import "./preflight-custom.css";
+
+import { Providers } from "@/app/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={clsx("dark:bg-zinc-900", inter.className)}>
         <Providers>{children}</Providers>
       </body>
     </html>
