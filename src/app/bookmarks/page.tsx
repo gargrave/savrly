@@ -2,7 +2,7 @@ import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { fetchAll } from "@/lib/api/api";
 import BookmarksContainer from "./Bookmarks.container";
 
-export const revalidate = 10;
+export const revalidate = 0;
 
 async function fetchData(): Promise<{
   bkmGroups: BkmGroup[];
@@ -12,6 +12,7 @@ async function fetchData(): Promise<{
     fetchAll<Bookmark>("bookmarks"),
     fetchAll<BkmGroup>("bkmGroups"),
   ]);
+  console.log({ bookmarks });
 
   return {
     bookmarks,
@@ -23,8 +24,8 @@ export default async function BookmarksPage() {
   const { bkmGroups, bookmarks } = await fetchData();
 
   return (
-    <div>
+    <main>
       <BookmarksContainer bkmGroups={bkmGroups} bookmarks={bookmarks} />
-    </div>
+    </main>
   );
 }

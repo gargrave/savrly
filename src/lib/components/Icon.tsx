@@ -1,7 +1,8 @@
 import React from "react";
-import { Icon as ChakraIcon } from "@chakra-ui/react";
+
+import { Icon as ChIcon, IconProps } from "@chakra-ui/react";
 import type { IconType } from "react-icons";
-import { IoFolderOpenOutline, IoAddCircleOutline } from "react-icons/io5";
+import { IoAddCircleOutline, IoFolderOpenOutline } from "react-icons/io5";
 
 type IconName = "folder" | "plusCircle";
 
@@ -14,6 +15,7 @@ interface Props {
   className?: string;
   color?: string;
   icon: IconName;
+  paddingTop?: number;
   size?: number;
 }
 
@@ -21,16 +23,17 @@ export default function Icon({
   className = "",
   color = "white",
   icon,
+  paddingTop = 0,
   size = 20,
 }: Props) {
   const _Icon = components[icon];
   return (
-    <ChakraIcon
+    <ChIcon
       as={_Icon}
+      boxSize={`${size}px`}
       className={className}
       color={color}
-      h={size}
-      w={size}
+      paddingTop={`${paddingTop}px`}
     />
   );
 }
