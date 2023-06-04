@@ -41,8 +41,7 @@ export default function BkmCard({ bookmark }: Props) {
     <div
       className="relative flex flex-col items-start justify-between gap-0
         border-b border-gray-600 select-none cursor-pointer
-        dark:bg-neutral-900
-        hover:dark:bg-white hover:dark:bg-opacity-10"
+        dark:bg-zinc-800 hover:dark:bg-white hover:dark:bg-opacity-10"
     >
       <div className="p-3">
         <div className="mb-1 font-semibold">{bookmark.title}</div>
@@ -81,6 +80,7 @@ export default function BkmCard({ bookmark }: Props) {
       </div>
 
       {/* hidden link element; makes full container clickable to open link */}
+      {/* TODO: replace with LinkOverlay from Chakra? */}
       <ExternalLink
         className={"absolute fill-parent hidden-text"}
         href={bookmark.url}

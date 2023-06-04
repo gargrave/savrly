@@ -16,6 +16,8 @@ export default function CreateBkmFormContainer({ onSuccess = _.noop }: Props) {
   const toast = useToast();
 
   const [createBkmState, createBkmFns] = useAsync(async (values) =>
+    // TODO: can we move this to a server action?
+    // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#server-action
     fetch("api/bookmarks", {
       method: "POST",
       body: JSON.stringify(values),

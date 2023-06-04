@@ -5,6 +5,7 @@ import { useBookmarksStore } from "@/app/bookmarks/bookmarks.store";
 import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { BkmHeader, BkmList } from "@/app/bookmarks/_components";
 import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
+import BkmControlBar from "@/app/bookmarks/_components/BkmControlBar";
 
 interface Props {
   bkmGroups: BkmGroup[];
@@ -26,6 +27,7 @@ export default function BookmarksContainer({ bkmGroups, bookmarks }: Props) {
   return (
     <>
       <BkmHeader />
+      <BkmControlBar />
       <BkmList />
     </>
   );

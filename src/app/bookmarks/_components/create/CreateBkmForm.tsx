@@ -54,6 +54,7 @@ export default function CreateBkmForm({ handlers, requestState }: Props) {
   }, []);
 
   return (
+    // TODO: turn this into an action?
     <form onSubmit={prevent(() => handlers.submit(formValues))}>
       {/* TODO: auto-focus input*/}
       <InputField
