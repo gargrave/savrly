@@ -1,7 +1,7 @@
 import colors from "tailwindcss/colors";
 
 import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
-import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
+import { useBkmGroupsStore } from "@/app/bookmarks/_store";
 import { ExternalLink, Icon } from "@/lib/components";
 import { _, Format, format, stop } from "@/lib/utils";
 

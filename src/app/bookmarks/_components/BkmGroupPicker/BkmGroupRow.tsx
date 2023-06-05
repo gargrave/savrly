@@ -3,8 +3,7 @@ import React from "react";
 import { clsx } from "clsx";
 import styled from "@emotion/styled";
 
-import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
-import { useCountBkmByGroup } from "@/app/bookmarks/_store";
+import { useBkmGroupsStore, useCountBkmByGroup } from "@/app/bookmarks/_store";
 import { Icon } from "@/lib/components";
 import { _ } from "@/lib/utils";
 

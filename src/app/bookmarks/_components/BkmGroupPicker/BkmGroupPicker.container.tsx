@@ -17,12 +17,10 @@ import styled from "@emotion/styled";
 import {
   type BkmGroupsStore,
   useBkmGroupsStore,
-} from "@/app/bookmarks/bkmGroups.store";
-import type { BkmGroup } from "@/app/bookmarks/bookmarks.types";
-import {
   useCountAllBkms,
   useCountBkmBySelectedGroup,
 } from "@/app/bookmarks/_store";
+import type { BkmGroup } from "@/app/bookmarks/bookmarks.types";
 import { Icon } from "@/lib/components";
 import { _ } from "@/lib/utils";
 

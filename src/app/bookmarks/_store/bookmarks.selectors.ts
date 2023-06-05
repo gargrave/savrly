@@ -1,9 +1,10 @@
 import React from "react";
 
 import type { Bookmark } from "@/app/bookmarks/bookmarks.types";
-import { useBookmarksStore } from "@/app/bookmarks/bookmarks.store";
-import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
 import { _ } from "@/lib/utils";
+
+import { useBkmGroupsStore } from "./bkmGroups.store";
+import { useBookmarksStore } from "./bookmarks.store";
 
 export const useCountAllBkms = () => {
   const bookmarks = useBookmarksStore(_.prop("data"));

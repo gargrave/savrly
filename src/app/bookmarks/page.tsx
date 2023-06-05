@@ -2,7 +2,9 @@ import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { fetchAll } from "@/lib/api/api";
 import BookmarksContainer from "./Bookmarks.container";
 
-export const revalidate = 0;
+// TODO: figure out how to reduce initial size
+
+export const revalidate = 1;
 
 async function fetchData(): Promise<{
   bkmGroups: BkmGroup[];
@@ -12,7 +14,6 @@ async function fetchData(): Promise<{
     fetchAll<Bookmark>("bookmarks"),
     fetchAll<BkmGroup>("bkmGroups"),
   ]);
-  console.log({ bookmarks });
 
   return {
     bookmarks,

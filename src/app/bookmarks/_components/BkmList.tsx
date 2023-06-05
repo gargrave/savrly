@@ -1,6 +1,5 @@
-import { useBookmarksStore } from "@/app/bookmarks/bookmarks.store";
+import { useBkmGroupsStore, useBookmarksStore } from "@/app/bookmarks/_store";
 import { Bookmark } from "@/app/bookmarks/bookmarks.types";
-import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
 import { _ } from "@/lib/utils";
 import BkmCard from "./BkmCard";
 
@@ -8,8 +7,8 @@ const byUpdated = (a: Bookmark, b: Bookmark) =>
   a.updated > b.updated ? -1 : 1;
 
 export default function BkmList() {
-  // TODO: try prop here
-  const selectedGroupId = useBkmGroupsStore((state) => state.selectedId);
+  const selectedGroupId = useBkmGroupsStore(_.prop("selectedId"));
+
   const bookmarks: Bookmark[] = useBookmarksStore((state) => {
     const filter = selectedGroupId
       ? (bkm: Bookmark) => bkm.groupId === selectedGroupId

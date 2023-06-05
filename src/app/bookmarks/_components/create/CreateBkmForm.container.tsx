@@ -2,8 +2,8 @@ import { useToast } from "@chakra-ui/react";
 import React from "react";
 import { useAsync } from "@react-hookz/web";
 
-import { useBookmarksStore } from "@/app/bookmarks/bookmarks.store";
-import type { Bookmark } from "@/app/bookmarks/bookmarks.types";
+import { useBookmarksStore } from "@/app/bookmarks/_store";
+import { type Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { type FormProps } from "@/lib/components";
 import { _ } from "@/lib/utils";
 
