@@ -1,52 +1,41 @@
 import React from "react";
 
 import {
-  Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
-  Button,
+  UseDisclosureProps,
 } from "@chakra-ui/react";
 
-import { InputField } from "@/lib/components";
+import { EditBkmFormContainer } from "@/app/bookmarks/_components/edit";
+import { Drawer } from "@/lib/components";
+import { _ } from "@/lib/utils";
 
-export default function EditBkmDrawer() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef(null);
-
-  return (
-    <>
-      <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
-        Open
-      </Button>
-
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={onClose}
-        // finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Create your account</DrawerHeader>
-
-          <DrawerBody>
-            <InputField label={"hi"} placeholder="Type here..." />
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </>
-  );
+interface Props extends UseDisclosureProps {
+  bkmId: string;
 }
+
+const EditBkmDrawer = React.memo(
+  ({ bkmId, isOpen = false, onClose = _.noop }: Props) => {
+    return (
+      <>
+        <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={"sm"}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Update Bookmark</DrawerHeader>
+
+            <DrawerBody>
+              <EditBkmFormContainer bkmId={bkmId} onSuccess={onClose} />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+);
+
+EditBkmDrawer.displayName = "EditBkmDrawer";
+export default EditBkmDrawer;

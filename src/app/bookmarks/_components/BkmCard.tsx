@@ -2,6 +2,7 @@ import colors from "tailwindcss/colors";
 
 import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { useBkmGroupsStore } from "@/app/bookmarks/_store";
+import EditBkmButton from "@/app/bookmarks/_components/edit/EditBkmButton";
 import { ExternalLink, Icon } from "@/lib/components";
 import { _, Format, format, stop } from "@/lib/utils";
 
@@ -17,10 +18,10 @@ interface Props {
   bookmark: Bookmark;
 }
 
-// TODO: edit controls
 // TODO: delete controls
 // TODO: loading state
 export default function BkmCard({ bookmark }: Props) {
+  const setSelectedId = useBkmGroupsStore((state) => state.setSelectedId);
   const group = useBkmGroupsStore((state) =>
     pipe(
       values,
@@ -33,10 +34,6 @@ export default function BkmCard({ bookmark }: Props) {
     ""
   );
 
-  function handleGroupClick() {
-    console.log(`CLICK ${bookmark.groupId}`);
-  }
-
   return (
     <div
       className="relative flex flex-col items-start justify-between gap-0
@@ -44,7 +41,7 @@ export default function BkmCard({ bookmark }: Props) {
         dark:bg-zinc-800 hover:dark:bg-white hover:dark:bg-opacity-10"
     >
       <div className="p-3">
-        <div className="mb-1 font-semibold">{bookmark.title}</div>
+        <div className="mb-1 pr-8 font-semibold">{bookmark.title}</div>
 
         {bookmark.description && (
           <div className="mb-1 text-sm dark:text-gray-300">
@@ -58,7 +55,7 @@ export default function BkmCard({ bookmark }: Props) {
             <>
               <div
                 className="inline-flex hover:underline"
-                onClick={stop(handleGroupClick)}
+                onClick={stop(() => setSelectedId(group.id))}
                 style={{ zIndex: 1 }}
               >
                 <Icon
@@ -78,6 +75,11 @@ export default function BkmCard({ bookmark }: Props) {
           <span>{format(bookmark.created, Format.ReadableWithTime)}</span>
         </div>
       </div>
+
+      <EditBkmButton
+        bkmId={bookmark.id}
+        className={"absolute top-2 right-2 dark:text-zinc-500 z-10"}
+      />
 
       {/* hidden link element; makes full container clickable to open link */}
       {/* TODO: replace with LinkOverlay from Chakra? */}

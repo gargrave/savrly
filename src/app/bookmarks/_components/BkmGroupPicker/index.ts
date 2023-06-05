@@ -1,3 +1,4 @@
-import BkmGroupPickerContainer from "./BkmGroupPicker.container";
+import BkmGroupPickerModal from "./BkmGroupPicker.modal";
+import BkmGroupPickerButton from "./BkmGroupPickerButton";
 
-export { BkmGroupPickerContainer };
+export { BkmGroupPickerButton, BkmGroupPickerModal };

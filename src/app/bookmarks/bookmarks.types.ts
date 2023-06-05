@@ -7,6 +7,8 @@ export interface BookmarkFields {
   url: string;
 }
 
+export type BkmPatchData = Pick<BookmarkFields, "groupId" | "title" | "url">;
+
 export type BookmarkPostData = Pick<BookmarkFields, "url">;
 
 export interface Bookmark extends ApiResource, BookmarkFields {}
