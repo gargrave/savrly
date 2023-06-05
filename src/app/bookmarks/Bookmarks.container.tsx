@@ -1,11 +1,9 @@
 "use client";
 import React from "react";
 
-import { useBookmarksStore } from "@/app/bookmarks/bookmarks.store";
-import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
-import { BkmHeader, BkmList } from "@/app/bookmarks/_components";
-import { useBkmGroupsStore } from "@/app/bookmarks/bkmGroups.store";
-import BkmControlBar from "@/app/bookmarks/_components/BkmControlBar";
+import type { BkmGroup, Bookmark } from "./bookmarks.types";
+import { BkmControlBar, BkmHeader, BkmList } from "./_components";
+import { useBkmGroupsStore, useBookmarksStore } from "./_store";
 
 interface Props {
   bkmGroups: BkmGroup[];
