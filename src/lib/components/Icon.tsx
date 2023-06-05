@@ -1,13 +1,20 @@
 import React from "react";
 
-import { Icon as ChIcon, IconProps } from "@chakra-ui/react";
+import { Icon as ChIcon } from "@chakra-ui/react";
 import type { IconType } from "react-icons";
-import { IoAddCircleOutline, IoFolderOpenOutline } from "react-icons/io5";
+import {
+  IoAddCircleOutline,
+  IoCreateOutline,
+  IoEllipsisHorizontalCircleOutline,
+  IoFolderOpenOutline,
+} from "react-icons/io5";
 
-type IconName = "folder" | "plusCircle";
+type IconName = "edit" | "folder" | "menu" | "plusCircle";
 
 const components: Record<IconName, IconType> = {
+  edit: IoCreateOutline,
   folder: IoFolderOpenOutline,
+  menu: IoEllipsisHorizontalCircleOutline,
   plusCircle: IoAddCircleOutline,
 };
 
@@ -21,7 +28,7 @@ interface Props {
 
 export default function Icon({
   className = "",
-  color = "white",
+  color = "currentColor",
   icon,
   paddingTop = 0,
   size = 20,

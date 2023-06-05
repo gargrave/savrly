@@ -4,9 +4,8 @@ import {
   FormLabel,
   InputProps as ChakraInputProps,
   Input as ChakraInput,
-  // FormErrorMessage,
-  // FormHelperText,
 } from "@chakra-ui/react";
+import { clsx } from "clsx";
 import styled from "@emotion/styled";
 
 const St = {
@@ -30,18 +29,20 @@ type PickedProps = Pick<
 >;
 
 interface Props extends PickedProps {
-  inputType?: "text" | "email";
+  displayValue?: string;
   label: string;
+  onClick?: () => void;
 }
 
-export default function InputField({
-  inputType = "text",
+export default function InputFieldTrigger({
+  displayValue,
   isDisabled,
   isReadOnly,
   isRequired,
   label,
   name,
   onChange,
+  onClick,
   placeholder,
   size,
   value,
@@ -52,14 +53,29 @@ export default function InputField({
       isReadOnly={isReadOnly}
       isRequired={isRequired}
       label={label}
+      onClick={onClick}
     >
-      <FormLabel>{label}</FormLabel>
+      <FormLabel className={clsx("cursor-pointer")}>{label}</FormLabel>
+
+      {/* dummy input field for display */}
       <ChakraInput
-        name={name}
+        className={clsx("cursor-pointer")}
+        id={`${name}__display`}
+        name={`${name}__display`}
         onChange={onChange}
         placeholder={placeholder}
         size={size}
-        type={inputType}
+        type={"text"}
+        value={displayValue || value}
+        isReadOnly
+      />
+
+      {/* hidden input field with actual value */}
+      <ChakraInput
+        name={name}
+        onChange={onChange}
+        size={size}
+        type={"hidden"}
         value={value}
       />
     </St.FormControl>

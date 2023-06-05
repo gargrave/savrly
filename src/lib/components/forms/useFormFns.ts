@@ -1,5 +1,8 @@
 import React from "react";
 
+import type { CurriedFunction2 } from "lodash";
+import { curry } from "lodash/fp";
+
 import { _ } from "@/lib/utils";
 
 type InputChangeEvent = React.ChangeEvent<
@@ -10,6 +13,7 @@ type UseFormFns<FormValuesType> = {
   formValues: FormValuesType;
   handleChange: (event: InputChangeEvent) => void;
   resetFormValues: () => void;
+  setValueByKey: CurriedFunction2<string, string, void>;
   valid: boolean;
 };
 
@@ -60,6 +64,7 @@ export function useFormFns<FormValuesType extends Object>(
     formValues,
     handleChange,
     resetFormValues,
+    setValueByKey: curry(setValueByKey),
     valid,
   };
 }

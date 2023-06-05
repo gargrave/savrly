@@ -1,11 +1,10 @@
 import React from "react";
 
-import { clsx } from "clsx";
 import styled from "@emotion/styled";
+import { clsx } from "clsx";
 
 import { useBkmGroupsStore, useCountBkmByGroup } from "@/app/bookmarks/_store";
 import { Icon } from "@/lib/components";
-import { _ } from "@/lib/utils";
 
 const St = {
   Container: styled.div`
@@ -14,18 +13,21 @@ const St = {
 };
 
 interface Props {
-  groupId?: string | null;
+  groupId: string | null;
+  isSelected: boolean;
+  onClick: (id: string | null) => void;
+  title?: string;
 }
 
-export default function BkmGroupRow({ groupId }: Props) {
-  const setSelectedId = useBkmGroupsStore((state) => state.setSelectedId);
-
+export default function BkmGroupRow({
+  groupId,
+  isSelected,
+  onClick,
+  title = "All Bookmarks",
+}: Props) {
   const group = useBkmGroupsStore((state) => state.data[groupId || ""]);
-  const selectedId = useBkmGroupsStore(_.prop("selectedId"));
-  const isSelected = groupId === selectedId;
-
   const count = useCountBkmByGroup(group?.id);
-  const title = group ? `${group.name} (${count})` : "All Bookmarks";
+  const rowTitle = group ? `${group.name} (${count})` : title;
 
   return (
     <St.Container
@@ -35,10 +37,10 @@ export default function BkmGroupRow({ groupId }: Props) {
         !isSelected && "bg-white bg-opacity-0 hover:bg-opacity-5",
         isSelected && "border border-gray-500 dark:bg-gray-600"
       )}
-      onClick={() => setSelectedId(group?.id || null)}
+      onClick={() => onClick(groupId)}
     >
       {group?.id && <Icon className="mr-1.5" icon="folder" size={18} />}
-      <div className="grow">{title}</div>
+      <div className="grow">{rowTitle}</div>
     </St.Container>
   );
 }
