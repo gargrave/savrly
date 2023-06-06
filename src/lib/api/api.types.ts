@@ -16,3 +16,11 @@ export interface ApiResource {
   id: string;
   updated: string;
 }
+
+export interface RequestState<DataType> {
+  // TODO: fix this type
+  error: PostgreSqlError | null;
+  id: string;
+  result: DataType | null;
+  state: "initial" | "loading" | "error" | "success";
+}

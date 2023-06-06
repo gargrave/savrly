@@ -1,4 +1,5 @@
 import { Spinner as ChSpinner, SpinnerProps } from "@chakra-ui/react";
+import { clsx } from "clsx";
 
 type PickedProps = Pick<SpinnerProps, "size">;
 
@@ -9,10 +10,13 @@ interface Props extends PickedProps {
 export default function Spinner({ asOverlay, size = "md" }: Props) {
   return (
     <>
-      <ChSpinner size={size} />
       {asOverlay && (
-        <div className="absolute fill-screen bg-gray-700 bg-opacity-80" />
+        <div className="absolute fill-parent bg-gray-700 bg-opacity-80" />
       )}
+      <ChSpinner
+        className={clsx(asOverlay && "absolute left-1/2")}
+        size={size}
+      />
     </>
   );
 }

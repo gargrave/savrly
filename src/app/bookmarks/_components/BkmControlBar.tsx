@@ -3,7 +3,7 @@ import React from "react";
 import styled from "@emotion/styled";
 
 import { HEADER_HEIGHT } from "./BkmHeader";
-import { BkmGroupPickerButton } from "./BkmGroupPicker";
+import { BkmGroupPickerButton } from "./bkmGroups/BkmGroupPicker";
 
 const St = {
   Container: styled.div`

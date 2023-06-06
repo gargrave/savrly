@@ -3,7 +3,7 @@ import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 
 import { useBkmGroupsStore } from "@/app/bookmarks/_store";
-import { BkmGroupPickerModal } from "@/app/bookmarks/_components/BkmGroupPicker";
+import { BkmGroupPickerModal } from "@/app/bookmarks/_components/bkmGroups";
 import { InputFieldTrigger } from "@/lib/components";
 
 interface Props {
@@ -17,6 +17,9 @@ export default function EditBkmGroupPicker({
   isLoading,
   onChange,
 }: Props) {
+  const groupCount = useBkmGroupsStore(
+    (state) => Object.keys(state.data || {}).length
+  );
   const groupName = useBkmGroupsStore((state) => {
     const group = state.data[groupId || ""];
     return group?.name || "";
@@ -51,7 +54,7 @@ export default function EditBkmGroupPicker({
         emptyGroupTitle={"No Group"}
         onClick={handleGroupClick}
         selectedGroupId={groupId}
-        title={"Choose Group"}
+        title={`Choose Group (${groupCount})`}
       />
     </>
   );

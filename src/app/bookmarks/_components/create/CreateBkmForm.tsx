@@ -1,16 +1,15 @@
 import React from "react";
 import { AsyncState } from "@react-hookz/web";
-import { Button } from "@chakra-ui/react";
 
 import type { Bookmark } from "@/app/bookmarks/bookmarks.types";
 import {
   Alert,
-  // Button,
+  Button,
   InputField,
   useFormFns,
   type FormConfig,
 } from "@/lib/components";
-import { prevent } from "@/lib/utils";
+import { stopPrevent } from "@/lib/utils";
 
 export type CreateBkmFields = {
   url: string;
@@ -54,7 +53,7 @@ export default function CreateBkmForm({ handlers, requestState }: Props) {
   }, []);
 
   return (
-    <form onSubmit={prevent(() => handlers.submit(formValues))}>
+    <form onSubmit={stopPrevent(() => handlers.submit(formValues))}>
       {/* TODO: auto-focus input*/}
       <InputField
         isRequired
@@ -73,7 +72,6 @@ export default function CreateBkmForm({ handlers, requestState }: Props) {
       )}
 
       <div className={"flex items-center justify-end mb-2 mt-4"}>
-        {/* TODO: make a wrapper Button components */}
         <Button
           colorScheme={"blue"}
           isDisabled={!valid || isLoading}
