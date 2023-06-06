@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, CloseButton, Heading, useDisclosure } from "@chakra-ui/react";
+import { CloseButton, Heading, useDisclosure } from "@chakra-ui/react";
 
 import {
   type BkmGroupsStore,
@@ -9,18 +9,18 @@ import {
   useCountBkmBySelectedGroup,
 } from "@/app/bookmarks/_store";
 import { type BkmGroup } from "@/app/bookmarks/bookmarks.types";
-import { Icon } from "@/lib/components";
+import { Button, Icon } from "@/lib/components";
 
 import BkmGroupPickerModal from "./BkmGroupPicker.modal";
 
 function getFullGroupPath(groups: BkmGroupsStore["data"], groupId: string) {
   const baseGroup = groups[groupId];
   let path = baseGroup.name;
-  let parent: BkmGroup | null = groups[baseGroup.parent];
+  let parent: BkmGroup | null = groups[baseGroup.parent || ""];
 
   while (parent) {
     path = `${parent.name} / ${path}`;
-    parent = groups[parent.parent];
+    parent = groups[parent.parent || ""];
   }
 
   return path;
@@ -49,7 +49,12 @@ export default function BkmGroupPickerButton() {
 
   return (
     <div className={"flex items-center"}>
-      <Button className={"h-full"} onClick={disclosure.onOpen} variant={"link"}>
+      <Button
+        className={"h-full"}
+        onClick={disclosure.onOpen}
+        variant={"link"}
+        aria-label={"Open Group Picker"}
+      >
         {selectedId && <Icon className={"mr-1.5"} icon={"folder"} size={18} />}
         <Heading as={"h3"} size={"sm"} paddingTop={"1px"}>
           {title}

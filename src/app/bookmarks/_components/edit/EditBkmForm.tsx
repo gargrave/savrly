@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Button } from "@chakra-ui/react";
 import { AsyncState } from "@react-hookz/web";
 
 import type { BkmPatchData, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import EditBkmGroupPicker from "@/app/bookmarks/_components/edit/EditBkmGroupPicker";
 import {
   Alert,
+  Button,
   InputField,
   useFormFns,
   type FormConfig,
@@ -83,6 +83,7 @@ export default function EditBkmForm({
       />
 
       {/* Group Picker */}
+      {/* TODO: this trigger would probably be better off as a button */}
       <EditBkmGroupPicker
         groupId={formValues.groupId}
         isLoading={isLoading}
@@ -96,7 +97,6 @@ export default function EditBkmForm({
       )}
 
       <div className={"flex items-center justify-end mb-2 mt-4"}>
-        {/* TODO: make a wrapper Button component */}
         <Button
           colorScheme={"blue"}
           isDisabled={!valid || isLoading}

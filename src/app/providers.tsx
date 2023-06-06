@@ -5,7 +5,7 @@ import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraBaseProvider, extendTheme } from "@chakra-ui/react";
 import chakraTheme from "@chakra-ui/theme";
 
-const { Button, FormLabel, Heading, Input, Link, Modal } =
+const { Button, Drawer, FormLabel, Heading, Input, Link, Modal } =
   chakraTheme.components;
 
 const config = {
@@ -16,6 +16,7 @@ const config = {
 const theme = extendTheme({
   components: {
     Button,
+    Drawer,
     FormLabel,
     Heading,
     Input,

@@ -32,6 +32,16 @@ export const useBookmarksStore = create<BookmarksStore>()(
           false,
           "Add Bookmark"
         ),
+
+      remove: (id) =>
+        set(
+          (state) =>
+            produce(state, (draft) => {
+              delete draft.data[id];
+            }),
+          false,
+          "Remove Bookmark"
+        ),
     }),
     { name: "Bookmarks" }
   )

@@ -37,6 +37,16 @@ export const useBkmGroupsStore = create<BkmGroupsStore>()(
           "Add BkmGroup"
         ),
 
+      remove: (id) =>
+        set(
+          (state) =>
+            produce(state, (draft) => {
+              delete draft.data[id];
+            }),
+          false,
+          "Remove BkmGroup"
+        ),
+
       setSelectedId: (id) =>
         set(
           (state) =>

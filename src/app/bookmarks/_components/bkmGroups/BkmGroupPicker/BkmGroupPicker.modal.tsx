@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Divider,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
+import { CreateBkmGroupFormContainer } from "@/app/bookmarks/_components/bkmGroups/create";
 import { useBkmGroupsStore } from "@/app/bookmarks/_store";
 import { _ } from "@/lib/utils";
 
 import BkmGroupList from "./BkmGroupList";
-import BkmGroupRow from "./BkmGroupRow";
 
 const St = {
   ModalContent: styled(ModalContent)<{ maxW: number }>`
@@ -33,7 +34,7 @@ interface Props extends UseDisclosureProps {
 }
 
 export default function BkmGroupPickerModal({
-  emptyGroupTitle,
+  emptyGroupTitle = "All Bookmarks",
   isOpen = false,
   onClose = _.noop,
   onClick,
@@ -51,19 +52,16 @@ export default function BkmGroupPickerModal({
         <ModalCloseButton />
 
         <ModalBody>
-          {/* special empty "no group" row */}
-          <BkmGroupRow
-            groupId={null}
-            isSelected={selectedGroupId === null}
-            onClick={onClick}
-            title={emptyGroupTitle}
-          />
-
           <BkmGroupList
+            emptyGroupTitle={emptyGroupTitle}
             selectedGroupId={selectedGroupId}
             groups={groups}
             onClick={onClick}
           />
+
+          <Divider className={"mt-2 mb-4 border-zinc-500"} />
+          {/* TODO: add option to hide this? */}
+          <CreateBkmGroupFormContainer />
         </ModalBody>
       </St.ModalContent>
     </Modal>

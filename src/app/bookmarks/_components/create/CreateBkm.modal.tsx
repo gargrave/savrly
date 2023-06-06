@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -11,7 +10,7 @@ import {
 import styled from "@emotion/styled";
 
 import { CreateBkmFormContainer } from "@/app/bookmarks/_components/create";
-import { Icon } from "@/lib/components";
+import { Button, Icon } from "@/lib/components";
 
 const St = {
   ModalContent: styled(ModalContent)`
@@ -24,7 +23,6 @@ export default function CreateBkmModal() {
 
   return (
     <>
-      {/* TODO: make a wrapper Button components */}
       <Button onClick={onOpen} variant={"ghost"}>
         <Icon icon={"plusCircle"} size={32} />
       </Button>
