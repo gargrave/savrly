@@ -1,9 +1,13 @@
 import React from "react";
 
-import { _ } from "@/lib/utils";
 import { makeRequest, useRequestsStore } from "@/app/api";
-import { BkmGroup, BkmGroupPostData } from "@/app/bookmarks/bookmarks.types";
+import type {
+  BkmGroup,
+  BkmGroupPatchData,
+  BkmGroupPostData,
+} from "@/app/bookmarks/bookmarks.types";
 import { PostgreSqlError } from "@/lib/api";
+import { _ } from "@/lib/utils";
 
 export const CREATE_BKM_GROUP_REQ_ID = "CreateBkmGroup";
 
@@ -14,7 +18,7 @@ interface Callbacks<T> {
   onSuccess?: (data: T) => void;
 }
 
-export default function useBkmGroupsApi() {
+export function useBkmGroupsApi() {
   const addReq = useRequestsStore((state) => state.add);
   const updateReq = useRequestsStore((state) => state.update);
   const removeReq = useRequestsStore((state) => state.remove);
@@ -53,7 +57,45 @@ export default function useBkmGroupsApi() {
         return data.bkmGroup;
       });
     },
-    []
+    [addReq, updateReq]
+  );
+
+  //------------------------------------------------
+  // UPDATE
+  //------------------------------------------------
+  const updateBkmGroup = React.useCallback(
+    (
+      id: string,
+      values: Partial<BkmGroupPatchData>,
+      { onError = _.noop, onSuccess = _.noop }: Callbacks<BkmGroup> = {}
+    ) => {
+      const req = makeRequest(id);
+      addReq(req);
+
+      fetch(`${API_ROOT}/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(values),
+      }).then(async (res) => {
+        const data = await res.json();
+
+        if (data.error) {
+          updateReq(req.id, {
+            error: data.error,
+            state: "error",
+          });
+          onError(data.error);
+          throw data.error;
+        }
+
+        updateReq(req.id, {
+          state: "success",
+          result: data.bkmGroup,
+        });
+        onSuccess(data.bkmGroup);
+        return data.bkmGroup;
+      });
+    },
+    [addReq, updateReq]
   );
 
   //------------------------------------------------
@@ -92,5 +134,6 @@ export default function useBkmGroupsApi() {
   return {
     createBkmGroup,
     deleteBkmGroup,
+    updateBkmGroup,
   };
 }

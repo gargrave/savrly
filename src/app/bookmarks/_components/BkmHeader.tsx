@@ -16,7 +16,7 @@ export default function BkmHeader() {
     <St.Container
       className="sticky top-0 p-3
         flex items-center justify-between
-        bg-white dark:bg-zinc-800 z-10"
+        bg-white dark:bg-zinc-800 z-20"
     >
       <Heading as={"h2"}>Bookmarks</Heading>
       <CreateBkmModal />

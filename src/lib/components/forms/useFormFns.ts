@@ -1,7 +1,5 @@
 import React from "react";
-
 import type { CurriedFunction2 } from "lodash";
-import { curry } from "lodash/fp";
 
 import { _ } from "@/lib/utils";
 
@@ -13,7 +11,7 @@ type UseFormFns<FormValuesType> = {
   formValues: FormValuesType;
   handleChange: (event: InputChangeEvent) => void;
   resetFormValues: () => void;
-  setValueByKey: CurriedFunction2<string, string, void>;
+  setValueByKey: CurriedFunction2<string, unknown, void>;
   valid: boolean;
 };
 
@@ -23,7 +21,6 @@ export interface FormConfig<FormValuesType> {
 
 export function useFormFns<FormValuesType extends Object>(
   initialValues: FormValuesType,
-
   config: FormConfig<FormValuesType> = {}
 ): UseFormFns<FormValuesType> {
   const { validate = _.always(true) } = config;
@@ -34,14 +31,14 @@ export function useFormFns<FormValuesType extends Object>(
 
   const setValueByKey = React.useCallback(
     (key: string, value: unknown) => {
-      if (key in formValues) {
+      if (key in initialValues) {
         setFormValues((prev) => ({
           ...prev,
           [key]: value,
         }));
       }
     },
-    [formValues]
+    [initialValues]
   );
 
   const resetFormValues = React.useCallback(() => {
@@ -60,11 +57,15 @@ export function useFormFns<FormValuesType extends Object>(
     setValid(validate(formValues));
   }, [formValues, validate]);
 
+  React.useEffect(() => {
+    setFormValues(initialValues);
+  }, [initialValues]);
+
   return {
     formValues,
     handleChange,
     resetFormValues,
-    setValueByKey: curry(setValueByKey),
+    setValueByKey: _.curry(setValueByKey),
     valid,
   };
 }

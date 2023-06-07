@@ -10,7 +10,7 @@ const { Button, Drawer, FormLabel, Heading, Input, Link, Modal } =
 
 const config = {
   initialColorMode: "dark",
-  useSystemColorMode: false,
+  useSystemColorMode: true,
 };
 
 const theme = extendTheme({

@@ -18,10 +18,13 @@ export default function EditBkmFormContainer({
   bkmId,
   onSuccess = _.noop,
 }: Props) {
-  const bookmark = useBookmarksStore((state) => state.data[bkmId]);
-  const addBkm = useBookmarksStore((state) => state.add);
+  // TODO: replace with useToasty
   const toast = useToast();
 
+  const bookmark = useBookmarksStore((state) => state.data[bkmId]);
+  const addBkm = useBookmarksStore((state) => state.add);
+
+  // TODO: move this to hook, similar to bkm groups
   const [updateBkmState, updateBkmFns] = useAsync(
     async (patchData: Partial<BkmPatchData>) =>
       fetch(`api/bookmarks/${bkmId}`, {

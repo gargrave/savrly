@@ -41,6 +41,9 @@ export const useBkmGroupsStore = create<BkmGroupsStore>()(
         set(
           (state) =>
             produce(state, (draft) => {
+              if (state.selectedId === id) {
+                draft.selectedId = null;
+              }
               delete draft.data[id];
             }),
           false,

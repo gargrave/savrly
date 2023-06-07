@@ -1,16 +1,16 @@
 import React from "react";
 
+import { UseDisclosureProps } from "@chakra-ui/react";
+
+import { EditBkmFormContainer } from "@/app/bookmarks/_components/edit";
 import {
+  Drawer,
+  DrawerContent,
   DrawerBody,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
   DrawerCloseButton,
-  UseDisclosureProps,
-} from "@chakra-ui/react";
-
-import { EditBkmFormContainer } from "@/app/bookmarks/_components/edit";
-import { Drawer } from "@/lib/components";
+} from "@/lib/components";
 import { _ } from "@/lib/utils";
 
 interface Props extends UseDisclosureProps {
@@ -20,19 +20,17 @@ interface Props extends UseDisclosureProps {
 const EditBkmDrawer = React.memo(
   ({ bkmId, isOpen = false, onClose = _.noop }: Props) => {
     return (
-      <>
-        <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={"sm"}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Update Bookmark</DrawerHeader>
+      <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={"sm"}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Update Bookmark</DrawerHeader>
 
-            <DrawerBody>
-              <EditBkmFormContainer bkmId={bkmId} onSuccess={onClose} />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </>
+          <DrawerBody>
+            <EditBkmFormContainer bkmId={bkmId} onSuccess={onClose} />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     );
   }
 );
