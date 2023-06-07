@@ -1,22 +1,13 @@
 import {
-  Modal,
   ModalOverlay,
-  ModalContent,
   ModalHeader,
   ModalBody,
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 
 import { CreateBkmFormContainer } from "@/app/bookmarks/_components/create";
-import { Button, Icon } from "@/lib/components";
-
-const St = {
-  ModalContent: styled(ModalContent)`
-    min-width: 351px;
-  `,
-};
+import { Button, Icon, Modal, ModalContent } from "@/lib/components";
 
 export default function CreateBkmModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,14 +20,14 @@ export default function CreateBkmModal() {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <St.ModalContent>
+        <ModalContent>
           <ModalHeader>New Bookmark</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
             <CreateBkmFormContainer onSuccess={onClose} />
           </ModalBody>
-        </St.ModalContent>
+        </ModalContent>
       </Modal>
     </>
   );

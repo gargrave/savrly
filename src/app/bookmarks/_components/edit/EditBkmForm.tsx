@@ -1,5 +1,4 @@
 import React from "react";
-
 import { AsyncState } from "@react-hookz/web";
 
 import type { BkmPatchData, Bookmark } from "@/app/bookmarks/bookmarks.types";
@@ -43,20 +42,6 @@ export default function EditBkmForm({
 
   const { formValues, handleChange, setValueByKey, valid } =
     useFormFns<BkmPatchData>(bookmark, { validate: validate(bookmark) });
-
-  // autofocus first input on mount
-  // TODO: see if we can do this with drawer prop instead: https://chakra-ui.com/docs/components/drawer/usage#focus-on-specific-element
-  React.useEffect(() => {
-    setTimeout(() => {
-      const urlInput = document.querySelector(
-        'input[name="title"]'
-      ) as HTMLInputElement;
-
-      if (urlInput) {
-        urlInput.focus();
-      }
-    }, 0);
-  }, []);
 
   return (
     <form onSubmit={prevent(() => handlers.submit(formValues))}>

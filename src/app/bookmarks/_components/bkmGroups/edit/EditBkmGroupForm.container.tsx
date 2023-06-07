@@ -1,49 +1,52 @@
-import { Heading } from "@chakra-ui/react";
 import React from "react";
 
 import type {
   BkmGroup,
-  BkmGroupPostData,
+  BkmGroupPatchData,
 } from "@/app/bookmarks/bookmarks.types";
 import { useBkmGroupsStore } from "@/app/bookmarks/_store";
 import { useBkmGroupsApi } from "@/app/bookmarks/_components/bkmGroups/hooks";
 import { type FormProps } from "@/lib/components";
-import { _ } from "@/lib/utils";
 import { useToasty } from "@/lib/hooks";
+import { _ } from "@/lib/utils";
 
-import CreateBkmGroupForm from "./CreateBkmGroupForm";
+import EditBkmGroupForm from "./EditBkmGroupForm";
 
-interface Props extends FormProps<BkmGroup> {}
+interface Props extends FormProps<BkmGroup> {
+  groupId: string;
+}
 
-export default function CreateBkmGroupFormContainer({
+export default function EditBkmGroupFormContainer({
+  groupId,
   onSuccess = _.noop,
 }: Props) {
   const { errorToast, successToast } = useToasty();
 
+  const bkmGroup = useBkmGroupsStore((state) => state.data[groupId]);
   const addBkmGroup = useBkmGroupsStore((state) => state.add);
-  const { createBkmGroup } = useBkmGroupsApi();
+  const { updateBkmGroup } = useBkmGroupsApi();
 
   const handleSubmit = React.useCallback(
-    (data: BkmGroupPostData) => {
-      createBkmGroup(data, {
+    (data: Partial<BkmGroupPatchData>) => {
+      updateBkmGroup(groupId, data, {
         onError: () => {
           errorToast({
-            title: "Error creating Group",
+            title: "Error updating Group",
           });
         },
         onSuccess: (result) => {
           successToast({
-            title: "Group created",
+            title: "Group updated!",
           });
           addBkmGroup(result);
           onSuccess(result);
         },
       });
     },
-    [addBkmGroup, createBkmGroup, errorToast, onSuccess, successToast]
+    [addBkmGroup, errorToast, groupId, onSuccess, successToast, updateBkmGroup]
   );
 
-  const handlers: React.ComponentProps<typeof CreateBkmGroupForm>["handlers"] =
+  const handlers: React.ComponentProps<typeof EditBkmGroupForm>["handlers"] =
     React.useMemo(
       () => ({
         submit: handleSubmit,
@@ -51,12 +54,5 @@ export default function CreateBkmGroupFormContainer({
       [handleSubmit]
     );
 
-  return (
-    <>
-      <Heading as={"h4"} size={"md"} className={"mb-2"}>
-        New Group
-      </Heading>
-      <CreateBkmGroupForm handlers={handlers} />
-    </>
-  );
+  return <EditBkmGroupForm bkmGroup={bkmGroup} handlers={handlers} />;
 }
