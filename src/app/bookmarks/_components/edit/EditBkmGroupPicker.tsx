@@ -7,6 +7,7 @@ import { BkmGroupPickerModal } from "@/app/bookmarks/_components/bkmGroups";
 import { InputFieldTrigger } from "@/lib/components";
 
 interface Props {
+  editable?: boolean;
   groupId: string | null;
   isLoading: boolean;
   label?: string;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function EditBkmGroupPicker({
+  editable = true,
   groupId,
   isLoading,
   label = "Group",
@@ -55,6 +57,7 @@ export default function EditBkmGroupPicker({
 
       <BkmGroupPickerModal
         {...disclosure}
+        editable={editable}
         emptyGroupTitle={placeholder}
         onClick={handleGroupClick}
         selectedGroupId={groupId}

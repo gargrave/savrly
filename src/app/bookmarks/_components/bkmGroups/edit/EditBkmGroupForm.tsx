@@ -58,6 +58,7 @@ export default function EditBkmGroupForm({ bkmGroup, handlers }: Props) {
       {/* Group Picker */}
       {/* TODO: this trigger would probably be better off as a button */}
       <EditBkmGroupPicker
+        editable={false}
         groupId={formValues.parent}
         isLoading={isLoading}
         label="Parent Group"
