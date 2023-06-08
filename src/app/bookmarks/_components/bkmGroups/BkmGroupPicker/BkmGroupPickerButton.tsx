@@ -3,28 +3,14 @@ import React from "react";
 import { CloseButton, Heading, useDisclosure } from "@chakra-ui/react";
 
 import {
-  type BkmGroupsStore,
   useBkmGroupsStore,
   useCountAllBkms,
   useCountBkmBySelectedGroup,
 } from "@/app/bookmarks/_store";
-import { type BkmGroup } from "@/app/bookmarks/bookmarks.types";
 import { Button, Icon } from "@/lib/components";
 
 import BkmGroupPickerModal from "./BkmGroupPicker.modal";
-
-function getFullGroupPath(groups: BkmGroupsStore["data"], groupId: string) {
-  const baseGroup = groups[groupId];
-  let path = baseGroup.name;
-  let parent: BkmGroup | null = groups[baseGroup.parent || ""];
-
-  while (parent) {
-    path = `${parent.name} / ${path}`;
-    parent = groups[parent.parent || ""];
-  }
-
-  return path;
-}
+import { getFullGroupPath } from "../bkmGroups.helpers";
 
 export default function BkmGroupPickerButton() {
   const setSelectedId = useBkmGroupsStore((state) => state.setSelectedId);

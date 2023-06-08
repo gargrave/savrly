@@ -1,27 +1,48 @@
 import { useBkmGroupsStore, useBookmarksStore } from "@/app/bookmarks/_store";
-import { Bookmark } from "@/app/bookmarks/bookmarks.types";
+import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { _ } from "@/lib/utils";
+import { getFullGroupPath } from "./bkmGroups/bkmGroups.helpers";
+import { useBkmGroups } from "./bkmGroups/hooks";
 import BkmCard from "./BkmCard";
-
-const byUpdated = (a: Bookmark, b: Bookmark) =>
-  a.updated > b.updated ? -1 : 1;
+import BkmBucket from "./BkmBucket";
 
 export default function BkmList() {
   const selectedGroupId = useBkmGroupsStore(_.prop("selectedId"));
+  const { sortedGroupKeys } = useBkmGroups();
 
-  const bookmarks: Bookmark[] = useBookmarksStore((state) => {
-    const filter = selectedGroupId
-      ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
-      : _.always(true);
+  const filterBySelectedGroup = selectedGroupId
+    ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
+    : _.always(true);
 
-    return Object.values(state.data).filter(filter).sort(byUpdated);
-  });
-
-  return (
-    <div>
-      {bookmarks.map((bookmark) => (
-        <BkmCard key={bookmark.id} bookmark={bookmark} />
-      ))}
-    </div>
+  const bookmarks: Bookmark[] = useBookmarksStore(
+    (state) =>
+      _.pipe(
+        _.values,
+        _.filter(filterBySelectedGroup),
+        _.orderBy(["updated"], ["desc"])
+      )(state.data) as Bookmark[]
   );
+
+  const bookmarkBuckets = useBookmarksStore((state) =>
+    _.pipe(
+      _.values,
+      _.filter(filterBySelectedGroup),
+      _.orderBy(["updated"], ["desc"]),
+      _.groupBy<Bookmark>("groupId")
+    )(state.data)
+  );
+
+  return selectedGroupId
+    ? bookmarks.map((bookmark) => (
+        <BkmCard key={bookmark.id} bookmark={bookmark} />
+      ))
+    : sortedGroupKeys.map((groupId) => {
+        return (
+          <BkmBucket
+            key={groupId}
+            bookmarks={bookmarkBuckets[groupId]}
+            groupId={groupId}
+          />
+        );
+      });
 }

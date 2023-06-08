@@ -4,6 +4,7 @@ import {
   DrawerProps,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import colors from "tailwindcss/colors";
 
 export {
   DrawerBody,
@@ -13,6 +14,8 @@ export {
 } from "@chakra-ui/react";
 
 export const DrawerContent = styled(ChDrawerContent)`
+  background-color: ${colors.zinc[800]};
+
   @media only screen and (max-width: 448px) {
     max-width: calc(100vw - 44px);
   }

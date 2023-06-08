@@ -15,6 +15,7 @@ import { _ } from "@/lib/utils";
 import BkmGroupList from "./BkmGroupList";
 
 interface Props extends UseDisclosureProps {
+  editable?: boolean;
   emptyGroupTitle?: string;
   onClick: (id: string | null) => void;
   selectedGroupId: string | null;
@@ -22,6 +23,7 @@ interface Props extends UseDisclosureProps {
 }
 
 export default function BkmGroupPickerModal({
+  editable = true,
   emptyGroupTitle = "All Bookmarks",
   isOpen = false,
   onClose = _.noop,
@@ -47,21 +49,22 @@ export default function BkmGroupPickerModal({
       <ModalContent maxW={380}>
         <ModalHeader className={"flex items-center gap-2"}>
           <span>{modalTitle}</span>
-          <Button
-            className={"dark:text-zinc-300"}
-            onClick={() => setEditing((prev) => !prev)}
-            size={"sm"}
-            variant={"ghost"}
-          >
-            {buttonText}
-          </Button>
+          {editable && (
+            <Button
+              className={"dark:text-zinc-300"}
+              onClick={() => setEditing((prev) => !prev)}
+              size={"sm"}
+              variant={"ghost"}
+            >
+              {buttonText}
+            </Button>
+          )}
         </ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
           <BkmGroupList
             emptyGroupTitle={emptyGroupTitle}
-            groups={groups}
             onClick={onClick}
             selectedGroupId={selectedGroupId}
             showControls={isEditing}

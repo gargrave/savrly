@@ -7,15 +7,21 @@ import { BkmGroupPickerModal } from "@/app/bookmarks/_components/bkmGroups";
 import { InputFieldTrigger } from "@/lib/components";
 
 interface Props {
+  editable?: boolean;
   groupId: string | null;
   isLoading: boolean;
+  label?: string;
   onChange: (id: string | null) => void;
+  placeholder?: string;
 }
 
 export default function EditBkmGroupPicker({
+  editable = true,
   groupId,
   isLoading,
+  label = "Group",
   onChange,
+  placeholder = "No Group",
 }: Props) {
   const groupCount = useBkmGroupsStore(
     (state) => Object.keys(state.data || {}).length
@@ -41,17 +47,18 @@ export default function EditBkmGroupPicker({
         displayValue={groupName}
         isRequired
         isDisabled={isLoading}
-        label={"Group"}
+        label={label}
         name={"groupId"}
         onClick={disclosure.onOpen}
-        placeholder={"No Group"}
+        placeholder={placeholder}
         value={groupId || ""}
         isReadOnly
       />
 
       <BkmGroupPickerModal
         {...disclosure}
-        emptyGroupTitle={"No Group"}
+        editable={editable}
+        emptyGroupTitle={placeholder}
         onClick={handleGroupClick}
         selectedGroupId={groupId}
         title={`Choose Group (${groupCount})`}

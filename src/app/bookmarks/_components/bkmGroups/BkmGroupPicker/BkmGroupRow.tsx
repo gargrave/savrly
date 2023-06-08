@@ -9,10 +9,17 @@ import {
   useBookmarksStore,
   useCountBkmByGroup,
 } from "@/app/bookmarks/_store";
-import { useBkmGroupsApi } from "@/app/bookmarks/_components/bkmGroups/hooks";
+import {
+  useBkmGroups,
+  useBkmGroupsApi,
+} from "@/app/bookmarks/_components/bkmGroups/hooks";
 import { Button, ButtonGroup, Icon, Spinner } from "@/lib/components";
 import { useToasty } from "@/lib/hooks";
 import { _, stop } from "@/lib/utils";
+
+function Indent() {
+  return <div className="w-[20px] h-full border-l border-zinc-600" />;
+}
 
 const St = {
   Container: styled.div`
@@ -39,9 +46,11 @@ export default function BkmGroupRow({
 }: Props) {
   const { errorToast, successToast } = useToasty();
 
-  const group = useBkmGroupsStore((state) => state.data[groupId || ""]);
+  const { groups, groupParentCounts } = useBkmGroups();
+  const group = groups[groupId || ""];
   const count = useCountBkmByGroup(group?.id);
   const rowTitle = group ? `${group.name} (${count})` : title;
+  const indent = groupParentCounts[groupId || ""] || 0;
 
   const removeBkmGroup = useBkmGroupsStore((state) => state.remove);
   const purgeBkmGroup = useBookmarksStore((state) => state.purgeBkmGroup);
@@ -73,10 +82,14 @@ export default function BkmGroupRow({
         "pl-2.5 relative rounded cursor-pointer font-semibold " +
           "flex items-center justify-justify-between shrink-0 w-full",
         !isSelected && "bg-white bg-opacity-0 hover:bg-opacity-5",
-        isSelected && "border border-gray-500 dark:bg-gray-600"
+        isSelected && "border border-zinc-500 dark:bg-zinc-700"
       )}
       onClick={() => onClick(groupId)}
     >
+      {Array.from(Array(indent)).map((x, idx) => (
+        <Indent key={idx} />
+      ))}
+
       {group?.id && <Icon className="mr-1.5" icon="folder" size={18} />}
       <div className="truncate">{rowTitle}</div>
 

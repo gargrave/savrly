@@ -4,11 +4,14 @@ import {
   ModalProps,
 } from "@chakra-ui/modal";
 import styled from "@emotion/styled";
+import colors from "tailwindcss/colors";
 
 export const ModalContent = styled(ChModalContent)`
+  background-color: ${colors.zinc[800]};
   max-height: 80vh;
   max-width: min(calc(100vw - 12px * 2), 448px);
   min-width: 351px;
+  width: max-content;
 `;
 
 const St = {
