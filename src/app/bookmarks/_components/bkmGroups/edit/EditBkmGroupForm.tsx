@@ -5,6 +5,7 @@ import type {
   BkmGroup,
   BkmGroupPatchData,
 } from "@/app/bookmarks/bookmarks.types";
+import EditBkmGroupPicker from "@/app/bookmarks/_components/edit/EditBkmGroupPicker";
 import {
   Alert,
   Button,
@@ -38,7 +39,7 @@ export default function EditBkmGroupForm({ bkmGroup, handlers }: Props) {
   const isLoading = request?.state === "loading";
   const error = request?.error;
 
-  const { formValues, handleChange, resetFormValues, valid } =
+  const { formValues, handleChange, setValueByKey, valid } =
     useFormFns<BkmGroupPatchData>(bkmGroup, { validate: validate(bkmGroup) });
 
   return (
@@ -52,6 +53,16 @@ export default function EditBkmGroupForm({ bkmGroup, handlers }: Props) {
         name={"name"}
         placeholder={"Name"}
         value={formValues.name}
+      />
+
+      {/* Group Picker */}
+      {/* TODO: this trigger would probably be better off as a button */}
+      <EditBkmGroupPicker
+        groupId={formValues.parent}
+        isLoading={isLoading}
+        label="Parent Group"
+        onChange={setValueByKey("parent")}
+        placeholder="No Parent Group"
       />
 
       {error && (
