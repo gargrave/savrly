@@ -3,8 +3,9 @@ import { useDisclosure } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
 import type { BkmGroup } from "@/app/bookmarks/bookmarks.types";
-import BkmGroupRow from "./BkmGroupRow";
 import EditBkmGroupModal from "@/app/bookmarks/_components/bkmGroups/edit/EditBkmGroup.modal";
+import { useBkmGroups } from "../hooks";
+import BkmGroupRow from "./BkmGroupRow";
 
 const St = {
   Container: styled.div`
@@ -19,18 +20,18 @@ type PickedProps = Pick<
 
 interface Props extends PickedProps {
   emptyGroupTitle: string;
-  groups: BkmGroup[];
   selectedGroupId: string | null;
 }
 
 export default function BkmGroupList({
   emptyGroupTitle,
-  groups,
   onClick,
   selectedGroupId,
   showControls,
 }: Props) {
   const disclosure = useDisclosure();
+
+  const { groups, sortedGroupKeys } = useBkmGroups();
   const [editingId, setEditingId] = React.useState<string | null>(null);
 
   const handleEditClick = React.useCallback(
@@ -38,7 +39,7 @@ export default function BkmGroupList({
       setEditingId(id);
       disclosure.onOpen();
     },
-    [disclosure.onOpen]
+    [disclosure]
   );
 
   return (
@@ -52,16 +53,19 @@ export default function BkmGroupList({
           title={emptyGroupTitle}
         />
 
-        {groups.map((group) => (
-          <BkmGroupRow
-            key={group.id}
-            groupId={group.id}
-            isSelected={group.id === selectedGroupId}
-            onClick={onClick}
-            onEditClick={handleEditClick}
-            showControls={showControls}
-          />
-        ))}
+        {sortedGroupKeys.map((groupId) => {
+          const group = groups[groupId];
+          return group ? (
+            <BkmGroupRow
+              key={group.id}
+              groupId={group.id}
+              isSelected={group.id === selectedGroupId}
+              onClick={onClick}
+              onEditClick={handleEditClick}
+              showControls={showControls}
+            />
+          ) : null;
+        })}
 
         <EditBkmGroupModal {...disclosure} groupId={editingId || ""} />
       </St.Container>

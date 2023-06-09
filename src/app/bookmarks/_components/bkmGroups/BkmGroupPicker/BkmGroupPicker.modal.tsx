@@ -65,7 +65,6 @@ export default function BkmGroupPickerModal({
         <ModalBody>
           <BkmGroupList
             emptyGroupTitle={emptyGroupTitle}
-            groups={groups}
             onClick={onClick}
             selectedGroupId={selectedGroupId}
             showControls={isEditing}

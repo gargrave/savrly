@@ -13,6 +13,7 @@ import { useBkmGroupsApi } from "@/app/bookmarks/_components/bkmGroups/hooks";
 import { Button, ButtonGroup, Icon, Spinner } from "@/lib/components";
 import { useToasty } from "@/lib/hooks";
 import { _, stop } from "@/lib/utils";
+import { getFullGroupPath } from "../bkmGroups.helpers";
 
 const St = {
   Container: styled.div`
@@ -39,9 +40,12 @@ export default function BkmGroupRow({
 }: Props) {
   const { errorToast, successToast } = useToasty();
 
-  const group = useBkmGroupsStore((state) => state.data[groupId || ""]);
+  const groups = useBkmGroupsStore((state) => state.data);
+  const group = groups[groupId || ""];
   const count = useCountBkmByGroup(group?.id);
-  const rowTitle = group ? `${group.name} (${count})` : title;
+  const rowTitle = group
+    ? `${getFullGroupPath(groups, group.id)} (${count})`
+    : title;
 
   const removeBkmGroup = useBkmGroupsStore((state) => state.remove);
   const purgeBkmGroup = useBookmarksStore((state) => state.purgeBkmGroup);

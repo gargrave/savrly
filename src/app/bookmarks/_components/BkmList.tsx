@@ -1,30 +1,18 @@
 import { useBkmGroupsStore, useBookmarksStore } from "@/app/bookmarks/_store";
-import { Bookmark } from "@/app/bookmarks/bookmarks.types";
+import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { _ } from "@/lib/utils";
+import { getFullGroupPath } from "./bkmGroups/bkmGroups.helpers";
+import { useBkmGroups } from "./bkmGroups/hooks";
 import BkmCard from "./BkmCard";
 import BkmBucket from "./BkmBucket";
 
 export default function BkmList() {
   const selectedGroupId = useBkmGroupsStore(_.prop("selectedId"));
+  const { sortedGroupKeys } = useBkmGroups();
 
   const filterBySelectedGroup = selectedGroupId
     ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
     : _.always(true);
-
-  const sortedGroupKeys = useBkmGroupsStore((state) => [
-    // null,
-    // ..._.pipe(
-    //   _.values,
-    //   _.orderBy(["name"], ["asc"]),
-    //   _.map(_.prop("id"))
-    // )(state.data),
-    null,
-    ..._.pipe(
-      _.values,
-      _.orderBy(["name"], ["asc"]),
-      _.map(_.prop("id"))
-    )(state.data),
-  ]);
 
   const bookmarks: Bookmark[] = useBookmarksStore(
     (state) =>
