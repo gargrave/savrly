@@ -4,40 +4,51 @@ import { _ } from "@/lib/utils";
 import BkmCard from "./BkmCard";
 import BkmBucket from "./BkmBucket";
 
-const sortByUpdated = (a: Bookmark, b: Bookmark) =>
-  a.updated > b.updated ? -1 : 1;
-
 export default function BkmList() {
   const selectedGroupId = useBkmGroupsStore(_.prop("selectedId"));
 
-  const bookmarks: Bookmark[] = useBookmarksStore((state) => {
-    const filterBySelectedGroup = selectedGroupId
-      ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
-      : _.always(true);
+  const filterBySelectedGroup = selectedGroupId
+    ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
+    : _.always(true);
 
-    return _.pipe(
+  const sortedGroupKeys = useBkmGroupsStore((state) => [
+    // null,
+    // ..._.pipe(
+    //   _.values,
+    //   _.orderBy(["name"], ["asc"]),
+    //   _.map(_.prop("id"))
+    // )(state.data),
+    null,
+    ..._.pipe(
       _.values,
-      _.filter(filterBySelectedGroup)
-    )(state.data).sort(sortByUpdated);
-  });
+      _.orderBy(["name"], ["asc"]),
+      _.map(_.prop("id"))
+    )(state.data),
+  ]);
 
-  const bookmarkBuckets = useBookmarksStore((state) => {
-    const filterBySelectedGroup = selectedGroupId
-      ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
-      : _.always(true);
+  const bookmarks: Bookmark[] = useBookmarksStore(
+    (state) =>
+      _.pipe(
+        _.values,
+        _.filter(filterBySelectedGroup),
+        _.orderBy(["updated"], ["desc"])
+      )(state.data) as Bookmark[]
+  );
 
-    return _.pipe(
+  const bookmarkBuckets = useBookmarksStore((state) =>
+    _.pipe(
       _.values,
       _.filter(filterBySelectedGroup),
+      _.orderBy(["updated"], ["desc"]),
       _.groupBy<Bookmark>("groupId")
-    )(state.data);
-  });
+    )(state.data)
+  );
 
   return selectedGroupId
     ? bookmarks.map((bookmark) => (
         <BkmCard key={bookmark.id} bookmark={bookmark} />
       ))
-    : Object.keys(bookmarkBuckets).map((groupId) => {
+    : sortedGroupKeys.map((groupId) => {
         return (
           <BkmBucket
             key={groupId}
