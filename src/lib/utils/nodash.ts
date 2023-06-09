@@ -10,6 +10,7 @@ import orderBy from "lodash/fp/orderBy";
 import pick from "lodash/fp/pick";
 import pipe from "lodash/fp/pipe";
 import prop from "lodash/fp/prop";
+import times from "lodash/fp/times";
 import values from "lodash/fp/values";
 
 export const _ = {
@@ -25,5 +26,6 @@ export const _ = {
   pick,
   pipe,
   prop,
+  times,
   values,
 };
