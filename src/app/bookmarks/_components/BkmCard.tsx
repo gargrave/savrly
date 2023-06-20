@@ -3,8 +3,10 @@ import colors from "tailwindcss/colors";
 import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { useBkmGroupsStore } from "@/app/bookmarks/_store";
 import EditBkmButton from "@/app/bookmarks/_components/edit/EditBkmButton";
-import { ExternalLink, Icon } from "@/lib/components";
+import { ExternalLink, Icon, Spinner } from "@/lib/components";
 import { _, Format, format, stop } from "@/lib/utils";
+import { useRequestsStore } from "@/app/api";
+import { clsx } from "clsx";
 
 const { find, pipe, values } = _;
 
@@ -19,9 +21,10 @@ interface Props {
 }
 
 // TODO: delete controls
-// TODO: loading state
 export default function BkmCard({ bookmark }: Props) {
   const setSelectedId = useBkmGroupsStore((state) => state.setSelectedId);
+  const request = useRequestsStore((state) => state.data[bookmark.id]);
+
   const group = useBkmGroupsStore((state) =>
     pipe(
       values,
@@ -34,11 +37,19 @@ export default function BkmCard({ bookmark }: Props) {
     ""
   );
 
+  const isLoading = request?.state === "loading";
+
   return (
     <div
-      className="relative flex flex-col items-start justify-between gap-0
-        border-b border-gray-600 select-none cursor-pointer
-        dark:bg-zinc-800 hover:dark:bg-white hover:dark:bg-opacity-10"
+      data-testid={"BookmarkCard"}
+      className={clsx(
+        "relative gap-0 " +
+          "border-b border-b-zinc-700 select-none last-of-type:border-b-0 " +
+          "dark:bg-zinc-800",
+        isLoading
+          ? "cursor-auto pointer-events-none"
+          : "cursor-pointer hover:dark:bg-zinc-300 hover:dark:bg-opacity-10"
+      )}
     >
       <div className="p-3">
         <div className="mb-1 pr-8 font-semibold">{bookmark.title}</div>
@@ -76,10 +87,7 @@ export default function BkmCard({ bookmark }: Props) {
         </div>
       </div>
 
-      <EditBkmButton
-        bkmId={bookmark.id}
-        className={"absolute top-2 right-2 dark:text-zinc-500 z-10"}
-      />
+      <EditBkmButton bkmId={bookmark.id} />
 
       {/* hidden link element; makes full container clickable to open link */}
       {/* TODO: replace with LinkOverlay from Chakra? */}
@@ -89,6 +97,8 @@ export default function BkmCard({ bookmark }: Props) {
       >
         {bookmark.title}
       </ExternalLink>
+
+      {isLoading && <Spinner asOverlay size={"lg"} />}
     </div>
   );
 }

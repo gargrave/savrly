@@ -28,12 +28,12 @@ export default function CreateBkmGroupFormContainer({
       createBkmGroup(data, {
         onError: () => {
           errorToast({
-            title: "Error creating Group",
+            title: "Error creating Group...",
           });
         },
         onSuccess: (result) => {
           successToast({
-            title: "Group created",
+            title: "Group created!",
           });
           addBkmGroup(result);
           onSuccess(result);

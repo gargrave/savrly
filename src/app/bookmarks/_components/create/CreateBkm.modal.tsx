@@ -14,7 +14,12 @@ export default function CreateBkmModal() {
 
   return (
     <>
-      <Button onClick={onOpen} variant={"ghost"}>
+      <Button
+        classes={"p-0"}
+        onClick={onOpen}
+        variant={"ghost"}
+        title={"Open 'Create Bookmark' Modal"}
+      >
         <Icon icon={"plusCircle"} size={32} />
       </Button>
 

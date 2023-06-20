@@ -5,8 +5,8 @@ import type { IconType } from "react-icons";
 import {
   IoAddCircleOutline,
   IoCreateOutline,
-  IoEllipsisHorizontalCircleOutline,
   IoFolderOpenOutline,
+  IoMenuSharp,
   IoTrashOutline,
 } from "react-icons/io5";
 
@@ -15,7 +15,7 @@ type IconName = "edit" | "folder" | "menu" | "plusCircle" | "trash";
 const components: Record<IconName, IconType> = {
   edit: IoCreateOutline,
   folder: IoFolderOpenOutline,
-  menu: IoEllipsisHorizontalCircleOutline,
+  menu: IoMenuSharp,
   plusCircle: IoAddCircleOutline,
   trash: IoTrashOutline,
 };

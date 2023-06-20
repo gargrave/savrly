@@ -11,12 +11,17 @@ export default function Spinner({ asOverlay, size = "md" }: Props) {
   return (
     <>
       {asOverlay && (
-        <div className="absolute fill-parent bg-gray-700 bg-opacity-80" />
+        <div className="absolute fill-parent dark:bg-zinc-900 dark:bg-opacity-60" />
       )}
-      <ChSpinner
-        className={clsx(asOverlay && "absolute left-1/2")}
-        size={size}
-      />
+
+      <div
+        className={clsx(
+          asOverlay &&
+            "absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
+        )}
+      >
+        <ChSpinner size={size} />
+      </div>
     </>
   );
 }

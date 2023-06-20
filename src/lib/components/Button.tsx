@@ -2,8 +2,11 @@ import { Button as ChButton, ButtonProps } from "@chakra-ui/react";
 import React from "react";
 
 import { _ } from "@/lib/utils";
+import { clsx } from "clsx";
 
 interface Props extends ButtonProps {
+  block?: boolean;
+  classes?: string;
   confirmText?: string;
   confirmTimeout?: number;
   onConfirmTimeout?: () => void;
@@ -11,6 +14,8 @@ interface Props extends ButtonProps {
 
 export default function Button(props: Props) {
   const {
+    block,
+    classes,
     confirmText,
     confirmTimeout = 2500,
     onClick = _.noop,
@@ -20,16 +25,18 @@ export default function Button(props: Props) {
 
   const [isConfirming, setConfirming] = React.useState(false);
 
+  let timeoutRef = React.useRef<any>();
   const handleClick: React.MouseEventHandler<HTMLButtonElement> =
     React.useCallback(
       (event) => {
         event.stopPropagation();
         if (isConfirming) {
+          clearTimeout(timeoutRef.current);
           onClick(event);
           setConfirming(false);
         } else {
           setConfirming(true);
-          setTimeout(() => {
+          timeoutRef.current = setTimeout(() => {
             setConfirming(false);
             onConfirmTimeout();
           }, confirmTimeout);
@@ -39,7 +46,11 @@ export default function Button(props: Props) {
     );
 
   return (
-    <ChButton {...otherProps} onClick={confirmText ? handleClick : onClick}>
+    <ChButton
+      className={clsx(classes, block && "w-full")}
+      {...otherProps}
+      onClick={confirmText ? handleClick : onClick}
+    >
       {isConfirming ? confirmText : props.children}
     </ChButton>
   );

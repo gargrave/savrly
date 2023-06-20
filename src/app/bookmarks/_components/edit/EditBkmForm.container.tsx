@@ -1,12 +1,14 @@
 import React from "react";
 
-import { useToast } from "@chakra-ui/react";
-import { useAsync } from "@react-hookz/web";
-
+import { useBookmarksApi } from "@/app/bookmarks/_components/hooks";
 import { useBookmarksStore } from "@/app/bookmarks/_store";
-import type { BkmPatchData, Bookmark } from "@/app/bookmarks/bookmarks.types";
+import type {
+  Bookmark,
+  BookmarkPatchData,
+} from "@/app/bookmarks/bookmarks.types";
 import { type FormProps } from "@/lib/components";
-import { _, findUpdatedKeys } from "@/lib/utils";
+import { useToasty } from "@/lib/hooks";
+import { _ } from "@/lib/utils";
 
 import EditBkmForm from "./EditBkmForm";
 
@@ -18,54 +20,32 @@ export default function EditBkmFormContainer({
   bkmId,
   onSuccess = _.noop,
 }: Props) {
-  // TODO: replace with useToasty
-  const toast = useToast();
+  const { errorToast, successToast } = useToasty();
 
   const bookmark = useBookmarksStore((state) => state.data[bkmId]);
   const addBkm = useBookmarksStore((state) => state.add);
+  const { updateBookmark } = useBookmarksApi();
 
-  // TODO: move this to hook, similar to bkm groups
-  const [updateBkmState, updateBkmFns] = useAsync(
-    async (patchData: Partial<BkmPatchData>) =>
-      fetch(`api/bookmarks/${bkmId}`, {
-        method: "PATCH",
-        body: JSON.stringify(patchData),
-      }).then(async (res) => {
-        const data = await res.json();
-
-        if (data.error) {
-          throw data.error;
-        }
-
-        return data.bookmark;
-      })
-  );
-
+  // TODO: move to useBookmarksUiFns
   const handleSubmit = React.useCallback(
-    (patchData: BkmPatchData) => {
-      const keys = findUpdatedKeys(patchData, bookmark);
-      if (keys.length) {
-        const updates = _.pick(keys, patchData);
-        updateBkmFns.reset();
-        updateBkmFns.execute(updates);
-      }
-    },
-    [bookmark]
-  );
-
-  React.useEffect(() => {
-    const { result, status } = updateBkmState;
-
-    if (status === "success" && result) {
-      toast({
-        isClosable: true,
-        status: "success",
-        title: "Bookmark updated!",
+    (data: Partial<BookmarkPatchData>) => {
+      updateBookmark(bkmId, data, {
+        onError: () => {
+          errorToast({
+            title: "Error updating Bookmark...",
+          });
+        },
+        onSuccess: (result) => {
+          successToast({
+            title: "Bookmark updated!",
+          });
+          addBkm(result);
+          onSuccess(result);
+        },
       });
-      addBkm(result);
-      onSuccess(result);
-    }
-  }, [addBkm, updateBkmState, onSuccess, toast]);
+    },
+    [addBkm, bkmId, errorToast, onSuccess, successToast, updateBookmark]
+  );
 
   const handlers: React.ComponentProps<typeof EditBkmForm>["handlers"] =
     React.useMemo(
@@ -75,11 +55,5 @@ export default function EditBkmFormContainer({
       [handleSubmit]
     );
 
-  return (
-    <EditBkmForm
-      bookmark={bookmark}
-      handlers={handlers}
-      requestState={updateBkmState}
-    />
-  );
+  return <EditBkmForm bookmark={bookmark} handlers={handlers} />;
 }

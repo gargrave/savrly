@@ -1,7 +1,6 @@
 import { useBkmGroupsStore, useBookmarksStore } from "@/app/bookmarks/_store";
-import type { BkmGroup, Bookmark } from "@/app/bookmarks/bookmarks.types";
+import type { Bookmark } from "@/app/bookmarks/bookmarks.types";
 import { _ } from "@/lib/utils";
-import { getFullGroupPath } from "./bkmGroups/bkmGroups.helpers";
 import { useBkmGroups } from "./bkmGroups/hooks";
 import BkmCard from "./BkmCard";
 import BkmBucket from "./BkmBucket";
@@ -14,6 +13,7 @@ export default function BkmList() {
     ? (bkm: Bookmark) => bkm.groupId === selectedGroupId
     : _.always(true);
 
+  // TODO: move a bunch of this selector logic into a hook
   const bookmarks: Bookmark[] = useBookmarksStore(
     (state) =>
       _.pipe(

@@ -1,50 +1,83 @@
 "use client";
-
 import React from "react";
 
-import { useAsync, useMountEffect } from "@react-hookz/web";
-
-import { fetchAll } from "@/lib/api/api";
+import { useBookmarksApi } from "@/app/bookmarks/_components/hooks";
+import { useBkmGroupsApi } from "@/app/bookmarks/_components/bkmGroups/hooks";
 import { Spinner } from "@/lib/components";
-import type { BkmGroup, Bookmark } from "./bookmarks.types";
+import { useToasty } from "@/lib/hooks";
 import { BkmControlBar, BkmHeader, BkmList } from "./_components";
 import { useBkmGroupsStore, useBookmarksStore } from "./_store";
 
+type AppState = "initial" | "loading" | "ready";
+
 // TODO: add a version number display
 export default function BookmarksContainer() {
+  const { errorToast } = useToasty();
+  const [appState, setAppState] = React.useState<AppState>("initial");
+  const [resourcesLoaded, setResourcesLoaded] = React.useState(0);
+
   const setBookmarks = useBookmarksStore((state) => state.setData);
   const setBkmGroups = useBkmGroupsStore((state) => state.setData);
 
-  const [dataFetchState, dataFetchFn] = useAsync(async () =>
-    Promise.all([
-      fetchAll<Bookmark>("bookmarks"),
-      fetchAll<BkmGroup>("bkmGroups"),
-    ])
-  );
+  const isLoading = resourcesLoaded < 2;
+
+  const { fetchBookmarks } = useBookmarksApi();
+  const { fetchGroups } = useBkmGroupsApi();
+
+  // TODO: move to useBookmarksUiFns
+  const loadBookmarks = React.useCallback(() => {
+    fetchBookmarks({
+      onError: () => {
+        errorToast({
+          title: "Error fetching Bookmarks...",
+        });
+      },
+      onSuccess: (bookmarks) => {
+        setBookmarks(bookmarks);
+        setResourcesLoaded((prev) => prev + 1);
+      },
+    });
+  }, [errorToast, fetchBookmarks, setBookmarks]);
+
+  const loadGroups = React.useCallback(() => {
+    fetchGroups({
+      onError: () => {
+        errorToast({
+          title: "Error fetching Groups...",
+        });
+      },
+      onSuccess: (groups) => {
+        setBkmGroups(groups);
+        setResourcesLoaded((prev) => prev + 1);
+      },
+    });
+  }, [errorToast, fetchGroups, setBkmGroups]);
 
   React.useEffect(() => {
-    if (Array.isArray(dataFetchState.result)) {
-      const [bookmarks = [], bkmGroups = []] = dataFetchState.result;
-      setBookmarks(bookmarks);
-      setBkmGroups(bkmGroups);
+    if (appState === "initial") {
+      setAppState("loading");
+      loadBookmarks();
+      loadGroups();
     }
-  }, [dataFetchState.result, setBkmGroups, setBookmarks]);
+  }, [appState, loadBookmarks, loadGroups]);
 
-  useMountEffect(() => {
-    dataFetchFn.execute();
-  });
-
-  const isLoading =
-    dataFetchState.status === "not-executed" ||
-    dataFetchState.status === "loading";
+  React.useEffect(() => {
+    if (resourcesLoaded >= 2) {
+      setAppState("ready");
+    }
+  }, [resourcesLoaded]);
 
   return (
     <>
       <BkmHeader />
       <BkmControlBar />
-      <BkmList />
-      {/* TODO: make a better loader */}
-      {isLoading && <Spinner />}
+      {isLoading ? (
+        <div className={"min-h-[100vh]"}>
+          <Spinner asOverlay size={"xl"} />
+        </div>
+      ) : (
+        <BkmList />
+      )}
     </>
   );
 }

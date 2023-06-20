@@ -1,56 +1,45 @@
-import { useToast } from "@chakra-ui/react";
 import React from "react";
-import { useAsync } from "@react-hookz/web";
 
+import { useBookmarksApi } from "@/app/bookmarks/_components/hooks";
 import { useBookmarksStore } from "@/app/bookmarks/_store";
-import { type Bookmark } from "@/app/bookmarks/bookmarks.types";
+import {
+  type Bookmark,
+  BookmarkPostData,
+} from "@/app/bookmarks/bookmarks.types";
 import { type FormProps } from "@/lib/components";
+import { useToasty } from "@/lib/hooks";
 import { _ } from "@/lib/utils";
 
-import CreateBkmForm, { CreateBkmFields } from "./CreateBkmForm";
+import CreateBkmForm from "./CreateBkmForm";
 
 interface Props extends FormProps<Bookmark> {}
 
 export default function CreateBkmFormContainer({ onSuccess = _.noop }: Props) {
+  const { errorToast, successToast } = useToasty();
+
   const addBkm = useBookmarksStore((state) => state.add);
-  const toast = useToast();
+  const { createBookmark } = useBookmarksApi();
 
-  const [createBkmState, createBkmFns] = useAsync(async (values) =>
-    fetch("api/bookmarks", {
-      method: "POST",
-      body: JSON.stringify(values),
-    }).then(async (res) => {
-      const data = await res.json();
-
-      if (data.error) {
-        throw data.error;
-      }
-
-      return data.bookmark;
-    })
-  );
-
+  // TODO: move to useBookmarksUiFns
   const handleSubmit = React.useCallback(
-    (data: CreateBkmFields) => {
-      createBkmFns.reset();
-      createBkmFns.execute(data);
-    },
-    [createBkmFns]
-  );
-
-  React.useEffect(() => {
-    const { result, status } = createBkmState;
-
-    if (status === "success" && result) {
-      toast({
-        isClosable: true,
-        status: "success",
-        title: "Bookmark created!",
+    (data: BookmarkPostData) => {
+      createBookmark(data, {
+        onError: () => {
+          errorToast({
+            title: "Error creating Bookmark...",
+          });
+        },
+        onSuccess: (result) => {
+          successToast({
+            title: "Bookmark created!",
+          });
+          addBkm(result);
+          onSuccess(result);
+        },
       });
-      addBkm(result);
-      onSuccess(result);
-    }
-  }, [addBkm, createBkmState, onSuccess, toast]);
+    },
+    [addBkm, createBookmark, errorToast, onSuccess, successToast]
+  );
 
   const handlers: React.ComponentProps<typeof CreateBkmForm>["handlers"] =
     React.useMemo(
@@ -60,5 +49,5 @@ export default function CreateBkmFormContainer({ onSuccess = _.noop }: Props) {
       [handleSubmit]
     );
 
-  return <CreateBkmForm handlers={handlers} requestState={createBkmState} />;
+  return <CreateBkmForm handlers={handlers} />;
 }

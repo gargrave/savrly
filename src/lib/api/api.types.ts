@@ -24,3 +24,8 @@ export interface RequestState<DataType> {
   result: DataType | null;
   state: "initial" | "loading" | "error" | "success";
 }
+
+export interface Callbacks<T> {
+  onError?: (error: PostgreSqlError) => void;
+  onSuccess?: (data: T) => void;
+}

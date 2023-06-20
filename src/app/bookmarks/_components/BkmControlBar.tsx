@@ -15,8 +15,10 @@ const St = {
 export default function BkmControlBar() {
   return (
     <St.Container
-      className={`px-3 sticky flex items-center justify-between 
-        border-b-2 border-gray-600 dark:text-gray-300 dark:bg-zinc-800 z-20`}
+      className={
+        "px-3 sticky flex items-center justify-between shadow " +
+        "border-b-2 border-zinc-700 dark:text-zinc-300 dark:bg-zinc-800 z-20"
+      }
     >
       <BkmGroupPickerButton />
     </St.Container>

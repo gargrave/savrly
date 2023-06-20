@@ -2,28 +2,29 @@ import React from "react";
 
 import { makeRequest, useRequestsStore } from "@/app/api";
 import type {
-  BkmGroup,
-  BkmGroupPatchData,
-  BkmGroupPostData,
+  Bookmark,
+  BookmarkPatchData,
+  BookmarkPostData,
 } from "@/app/bookmarks/bookmarks.types";
 import { Callbacks } from "@/lib/api";
 import { _ } from "@/lib/utils";
 
-const API_ROOT = "api/bkmGroups";
+const API_ROOT = "api/bookmarks";
 
-export const FETCH_GROUPS_REQ_ID = "FetchGroups";
-export const CREATE_BKM_GROUP_REQ_ID = "CreateBkmGroup";
+export const FETCH_BOOKMARKS_REQ_ID = "FetchBookmarks";
+export const CREATE_BOOKMARK_REQ_ID = "CreateBookmark";
 
-export function useBkmGroupsApi() {
+export function useBookmarksApi() {
   const addReq = useRequestsStore((state) => state.add);
   const updateReq = useRequestsStore((state) => state.update);
   const removeReq = useRequestsStore((state) => state.remove);
+
   //------------------------------------------------
   // FETCH
   //------------------------------------------------
-  const fetchGroups = React.useCallback(
-    ({ onError = _.noop, onSuccess = _.noop }: Callbacks<BkmGroup[]> = {}) => {
-      const req = makeRequest(FETCH_GROUPS_REQ_ID);
+  const fetchBookmarks = React.useCallback(
+    ({ onError = _.noop, onSuccess = _.noop }: Callbacks<Bookmark[]> = {}) => {
+      const req = makeRequest(FETCH_BOOKMARKS_REQ_ID);
       addReq(req);
 
       fetch(API_ROOT, {
@@ -40,13 +41,13 @@ export function useBkmGroupsApi() {
           throw data.error;
         }
 
-        const { bkmGroups } = data;
+        const { bookmarks } = data;
         updateReq(req.id, {
           state: "success",
-          result: bkmGroups,
+          result: bookmarks,
         });
-        onSuccess(bkmGroups);
-        return bkmGroups;
+        onSuccess(bookmarks);
+        return bookmarks;
       });
     },
     [addReq, updateReq]
@@ -55,12 +56,12 @@ export function useBkmGroupsApi() {
   //------------------------------------------------
   // CREATE
   //------------------------------------------------
-  const createBkmGroup = React.useCallback(
+  const createBookmark = React.useCallback(
     (
-      values: BkmGroupPostData,
-      { onError = _.noop, onSuccess = _.noop }: Callbacks<BkmGroup> = {}
+      values: BookmarkPostData,
+      { onError = _.noop, onSuccess = _.noop }: Callbacks<Bookmark> = {}
     ) => {
-      const req = makeRequest(CREATE_BKM_GROUP_REQ_ID);
+      const req = makeRequest(CREATE_BOOKMARK_REQ_ID);
       addReq(req);
 
       fetch(API_ROOT, {
@@ -80,10 +81,10 @@ export function useBkmGroupsApi() {
 
         updateReq(req.id, {
           state: "success",
-          result: data.bkmGroup,
+          result: data.bookmark,
         });
-        onSuccess(data.bkmGroup);
-        return data.bkmGroup;
+        onSuccess(data.bookmark);
+        return data.bookmark;
       });
     },
     [addReq, updateReq]
@@ -92,11 +93,11 @@ export function useBkmGroupsApi() {
   //------------------------------------------------
   // UPDATE
   //------------------------------------------------
-  const updateBkmGroup = React.useCallback(
+  const updateBookmark = React.useCallback(
     (
       id: string,
-      values: Partial<BkmGroupPatchData>,
-      { onError = _.noop, onSuccess = _.noop }: Callbacks<BkmGroup> = {}
+      values: Partial<BookmarkPatchData>,
+      { onError = _.noop, onSuccess = _.noop }: Callbacks<Bookmark> = {}
     ) => {
       const req = makeRequest(id);
       addReq(req);
@@ -118,10 +119,10 @@ export function useBkmGroupsApi() {
 
         updateReq(req.id, {
           state: "success",
-          result: data.bkmGroup,
+          result: data.bookmark,
         });
-        onSuccess(data.bkmGroup);
-        return data.bkmGroup;
+        onSuccess(data.bookmark);
+        return data.bookmark;
       });
     },
     [addReq, updateReq]
@@ -130,10 +131,10 @@ export function useBkmGroupsApi() {
   //------------------------------------------------
   // DELETE
   //------------------------------------------------
-  const deleteBkmGroup = React.useCallback(
+  const deleteBookmark = React.useCallback(
     (
       id: string,
-      { onError = _.noop, onSuccess = _.noop }: Callbacks<BkmGroup> = {}
+      { onError = _.noop, onSuccess = _.noop }: Callbacks<Bookmark> = {}
     ) => {
       const req = makeRequest(id);
       addReq(req);
@@ -153,17 +154,17 @@ export function useBkmGroupsApi() {
         }
 
         removeReq(req.id);
-        onSuccess(data.bkmGroup);
-        return data.bkmGroup;
+        onSuccess(data.bookmark);
+        return data.bookmark;
       });
     },
     [addReq, removeReq, updateReq]
   );
 
   return {
-    createBkmGroup,
-    deleteBkmGroup,
-    fetchGroups,
-    updateBkmGroup,
+    createBookmark,
+    deleteBookmark,
+    fetchBookmarks,
+    updateBookmark,
   };
 }

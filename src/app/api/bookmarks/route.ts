@@ -7,6 +7,16 @@ import type {
 } from "@/app/bookmarks/bookmarks.types";
 import { supabase } from "@/lib/supabaseClient";
 
+const TABLE = "bookmarks";
+
+export async function GET() {
+  const { data, error } = await supabase.from(TABLE).select();
+
+  return error
+    ? NextResponse.json({ error }, { status: 400 })
+    : NextResponse.json({ bookmarks: data });
+}
+
 export async function POST(request: Request) {
   const json = await request.json();
 
@@ -45,10 +55,7 @@ export async function POST(request: Request) {
     url,
   };
 
-  const { data, error } = await supabase
-    .from("bookmarks")
-    .insert(bookmark)
-    .select();
+  const { data, error } = await supabase.from(TABLE).insert(bookmark).select();
 
   return error
     ? NextResponse.json({ error }, { status: 400 })

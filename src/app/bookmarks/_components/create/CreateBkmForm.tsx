@@ -1,7 +1,5 @@
 import React from "react";
-import { AsyncState } from "@react-hookz/web";
 
-import type { Bookmark } from "@/app/bookmarks/bookmarks.types";
 import {
   Alert,
   Button,
@@ -10,6 +8,8 @@ import {
   type FormConfig,
 } from "@/lib/components";
 import { stopPrevent } from "@/lib/utils";
+import { useRequestsStore } from "@/app/api";
+import { CREATE_BOOKMARK_REQ_ID } from "@/app/bookmarks/_components/hooks";
 
 export type CreateBkmFields = {
   url: string;
@@ -27,12 +27,14 @@ interface Props {
   handlers: {
     submit: (values: CreateBkmFields) => void;
   };
-  requestState: AsyncState<Bookmark>;
 }
 
-export default function CreateBkmForm({ handlers, requestState }: Props) {
-  const isLoading = requestState.status === "loading";
-  const error = requestState.error;
+export default function CreateBkmForm({ handlers }: Props) {
+  const request = useRequestsStore(
+    (state) => state.data[CREATE_BOOKMARK_REQ_ID]
+  );
+  const isLoading = request?.state === "loading";
+  const error = request?.error;
 
   const { formValues, handleChange, valid } = useFormFns<CreateBkmFields>(
     initialFormValues,
@@ -46,15 +48,12 @@ export default function CreateBkmForm({ handlers, requestState }: Props) {
         'input[name="url"]'
       ) as HTMLInputElement;
 
-      if (urlInput) {
-        urlInput.focus();
-      }
+      urlInput?.focus();
     }, 0);
   }, []);
 
   return (
     <form onSubmit={stopPrevent(() => handlers.submit(formValues))}>
-      {/* TODO: auto-focus input*/}
       <InputField
         isRequired
         isDisabled={isLoading}
